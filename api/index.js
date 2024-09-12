@@ -1,52 +1,36 @@
 const express = require('express');
-const app = express();
 const cors = require('cors');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+const dotenv = require('dotenv').config();
 
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+// Initialize the Express app
+const app = express();
+
+// Google Generative AI setup
+const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+
+// Enable CORS for your frontend origin
+app.use(cors())
 
 app.use(express.json());
-app.use(cors());
 
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-
-// Load environment variables
-const dotenv = require('dotenv').config();
-const genAI = new GoogleGenerativeAI(process.env.API_KEY);
-
-// The Gemini 1.5 models are versatile and work with most use cases
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-// Main function to handle the request
-module.exports = async (req, res) => {
+// Your POST route
+app.post('/api', async (req, res) => {
     try {
-        // Check if it's a POST request
-        if (req.method === 'POST') {
-            const prompt = req.body.prompt || "hey, how are you";
-            
-            // Generate content using the Gemini API
-            const result = await model.generateContent(prompt);
-            const response = await result.response;
-            const text = await response.text(); // Await this if it's a promise
-            
-            // Return the result as JSON
-            res.status(200).json({ result: text });
-        } else {
-            // If it's not a POST request, return a 405 method not allowed error
-            res.status(405).json({ error: "Method not allowed" });
-        }
+        const prompt = req.body.prompt || 'hey, how are you';
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = await response.text();
+        res.status(200).json({ result: text });
     } catch (error) {
         console.error(error);
-        // Return a 500 error if something goes wrong
-        res.status(500).json({ error: "Something went wrong" });
+        res.status(500).json({ error: 'Something went wrong' });
     }
-};
+});
 
-
-
-
-
-
-
+// Export the Express app to be used as a Vercel serverless function
+module.exports = app;
 
 
 
