@@ -46,7 +46,7 @@ const port = process.env.PORT ||  8080
 
 
 
-app.post('/ai', async (req, res) => {
+app.post('/', async (req, res) => {
 
     try {
         console.log("tesitng 1")
