@@ -2,7 +2,7 @@
 
 // // Access your API key as an environment variable (see "Set up your API key" above)
 
-// const api = "AIzaSyBIThDm2OJvW7S631Lv_MNtFFtodldWmcg"
+// const api = ""
 
 // const genAI = new GoogleGenerativeAI(api);
 
