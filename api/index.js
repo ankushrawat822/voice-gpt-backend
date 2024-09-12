@@ -1,3 +1,12 @@
+const express = require('express');
+const app = express();
+const cors = require('cors');
+
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+app.use(express.json());
+app.use(cors());
+
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 // Load environment variables
